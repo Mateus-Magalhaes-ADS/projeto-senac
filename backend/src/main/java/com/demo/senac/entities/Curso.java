@@ -2,6 +2,7 @@ package com.demo.senac.entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +22,7 @@ public class Curso {
     private Double valorMensalidade;
 
     @OneToMany(mappedBy = "curso")
-    private List<Matricula> matriculas;
+    private List<Matricula> matriculas = new ArrayList<>();
 
     public Curso(){}
 

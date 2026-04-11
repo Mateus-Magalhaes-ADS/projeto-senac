@@ -1,0 +1,2 @@
+INSERT INTO tb_curso(nome, descricao, duracao, modalidade, valor_mensalidade) VALUES ('TESTE', 'TESTE', '2 anos', 'Online', 100.00);
+INSERT INTO tb_curso(nome, descricao, duracao, modalidade, valor_mensalidade) VALUES ('Java Básico', 'Curso introdutório de Java', '2 meses', 'Online', 120.00);

@@ -13,25 +13,33 @@ public class MatriculaDTO {
     private Long id;
     private LocalDate dataMatricula;
     private String status;
-    private Aluno aluno;
-    private Curso curso;
+    // Guarda apenas o ID — evita loop infinito e não expõe dados desnecessários
+    private Long alunoId;
+    private String alunoNome;
+    private Long cursoId;
+    private String cursoNome;
 
-    public MatriculaDTO(){}
+    public MatriculaDTO() {}
 
-    public MatriculaDTO(Long id, LocalDate dataMatricula, String status, Aluno aluno, Curso curso) {
+    public MatriculaDTO(Long id, LocalDate dataMatricula, String status, Long alunoId, String alunoNome, Long cursoId, String cursoNome) {
         this.id = id;
         this.dataMatricula = dataMatricula;
         this.status = status;
-        this.aluno = aluno;
-        this.curso = curso;
+        this.alunoId = alunoId;
+        this.alunoNome = alunoNome;
+        this.cursoId = cursoId;
+        this.cursoNome = cursoNome;
     }
 
-    public MatriculaDTO(Matricula e){
-        id = e.getId();
-        dataMatricula = e.getDataMatricula();
-        status = e.getStatus();
-        aluno = e.getAluno();
-        curso = e.getCurso();
+    public MatriculaDTO(Matricula entity) {
+        this.id = entity.getId();
+        this.dataMatricula = entity.getDataMatricula();
+        this.status = entity.getStatus();
+        // Acessa só o necessário do relacionamento
+        this.alunoId = entity.getAluno().getId();
+        this.alunoNome = entity.getAluno().getNome();
+        this.cursoId = entity.getCurso().getId();
+        this.cursoNome = entity.getCurso().getNome();
     }
 
     public Long getId() {
@@ -58,19 +66,35 @@ public class MatriculaDTO {
         this.status = status;
     }
 
-    public Aluno getAluno() {
-        return aluno;
+    public Long getAlunoId() {
+        return alunoId;
     }
 
-    public void setAluno(Aluno aluno) {
-        this.aluno = aluno;
+    public void setAlunoId(Long alunoId) {
+        this.alunoId = alunoId;
     }
 
-    public Curso getCurso() {
-        return curso;
+    public String getAlunoNome() {
+        return alunoNome;
     }
 
-    public void setCurso(Curso curso) {
-        this.curso = curso;
+    public void setAlunoNome(String alunoNome) {
+        this.alunoNome = alunoNome;
+    }
+
+    public Long getCursoId() {
+        return cursoId;
+    }
+
+    public void setCursoId(Long cursoId) {
+        this.cursoId = cursoId;
+    }
+
+    public String getCursoNome() {
+        return cursoNome;
+    }
+
+    public void setCursoNome(String cursoNome) {
+        this.cursoNome = cursoNome;
     }
 }
