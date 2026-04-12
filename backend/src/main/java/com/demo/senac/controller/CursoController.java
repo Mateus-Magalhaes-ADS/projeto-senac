@@ -24,6 +24,18 @@ public class CursoController {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<CursoDTO> findById(@PathVariable Long id){
+        CursoDTO dto = service.findById(id);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<CursoDTO> uptade(@PathVariable Long id , @RequestBody CursoDTO dto){
+        CursoDTO newDto = service.uptade(id , dto);
+        return ResponseEntity.ok().body(newDto);
+    }
+
     @PostMapping
     public ResponseEntity<CursoDTO> insert(@RequestBody CursoDTO dto){
         dto = service.insert(dto);
@@ -32,5 +44,10 @@ public class CursoController {
         return ResponseEntity.created(uri).body(dto);
     }
 
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }
