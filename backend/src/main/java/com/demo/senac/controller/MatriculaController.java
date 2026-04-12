@@ -1,7 +1,7 @@
 package com.demo.senac.controller;
 
 import com.demo.senac.dto.MatriculaDTO;
-import com.demo.senac.service.MatriculaService;
+import com.demo.senac.services.MatriculaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

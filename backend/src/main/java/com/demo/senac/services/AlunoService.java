@@ -1,10 +1,10 @@
-package com.demo.senac.service;
+package com.demo.senac.services;
 
 import com.demo.senac.dto.AlunoDTO;
 import com.demo.senac.entities.Aluno;
 import com.demo.senac.repositories.AlunoRepository;
-import com.demo.senac.service.exceptions.DatabaseException;
-import com.demo.senac.service.exceptions.ResourceNotFoundException;
+import com.demo.senac.services.exceptions.DatabaseException;
+import com.demo.senac.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

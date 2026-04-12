@@ -1,4 +1,4 @@
-package com.demo.senac.service.exceptions;
+package com.demo.senac.services.exceptions;
 
 public class DatabaseException extends RuntimeException {
 

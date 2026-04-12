@@ -1,4 +1,4 @@
-package com.demo.senac.service;
+package com.demo.senac.services;
 
 import com.demo.senac.dto.MatriculaDTO;
 import com.demo.senac.entities.Aluno;

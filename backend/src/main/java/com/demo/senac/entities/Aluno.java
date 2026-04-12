@@ -21,12 +21,16 @@ public class Aluno {
     private String senha;
     private String endereco;
 
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @OneToMany(mappedBy = "aluno")
     private List<Matricula> matriculas = new ArrayList<>();
 
     public Aluno(){}
 
-    public Aluno(Long id, String nome, String cpf, String email, String telefone, String senha, String endereco) {
+    public Aluno(Long id, String nome, String cpf, String email, String telefone, String senha, String endereco, User user) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -34,6 +38,15 @@ public class Aluno {
         this.telefone = telefone;
         this.senha = senha;
         this.endereco = endereco;
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getId() {
