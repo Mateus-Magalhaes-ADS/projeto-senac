@@ -66,6 +66,14 @@ public class Matricula {
         return curso;
     }
 
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
+    }
+
+    public void setCurso(Curso curso) {
+        this.curso = curso;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
