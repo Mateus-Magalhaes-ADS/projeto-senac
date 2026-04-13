@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AcadêmiX — Painel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* estilos extras para modais e botões inline */
+    .action-buttons { display: flex; gap: 6px; align-items: center; }
+    .btn-icon-sm { background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 4px; transition: all 0.2s; display: inline-flex; align-items: center; }
+    .btn-icon-sm:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .btn-icon-sm.delete:hover { color: var(--rose); }
+    .btn-icon-sm.edit:hover { color: var(--accent); }
+    .btn-new { margin-left: auto; background: var(--accent); color: #fff; border: none; padding: 6px 12px; border-radius: var(--radius-sm); font-size: 11px; font-weight: 500; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
+    .btn-new:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); width: 90%; max-width: 500px; padding: 24px; position: relative; animation: fadeUp 0.2s ease; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .modal-header h3 { font-family: var(--font-display); font-size: 18px; }
+    .modal-close { background: none; border: none; color: var(--text-muted); font-size: 24px; cursor: pointer; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+    .modal-footer button { padding: 8px 16px; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 12px; cursor: pointer; }
+    .btn-secondary { background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-secondary); }
+    .btn-primary { background: var(--accent); border: none; color: white; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 11px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .form-group input, .form-group select { width: 100%; background: var(--bg-field); border: 1px solid var(--border); border-radius: var(--radius-field); padding: 10px 12px; color: var(--text-primary); font-family: var(--font-mono); font-size: 13px; }
+    .form-group input:focus { border-color: var(--accent); outline: none; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body class="page-dashboard">
+
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- ════════════ SIDEBAR ════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">Ax</div>
+      <div class="logo-text">Acadêmi<span>X</span></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navegação</div>
+      <div class="nav-item active" id="nav-dashboard" onclick="navigate('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Dashboard
+        <div class="nav-dot"></div>
+      </div>
+      <div class="sidebar-label" style="margin-top:16px">Cadastros</div>
+      <div class="nav-item" id="nav-cursos" onclick="navigate('cursos')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Cursos
+        <div class="nav-dot"></div>
+      </div>
+      <div class="nav-item" id="nav-alunos" onclick="navigate('alunos')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Alunos
+        <div class="nav-dot"></div>
+      </div>
+      <div class="nav-item" id="nav-matriculas" onclick="navigate('matriculas')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Matrículas
+        <div class="nav-dot"></div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="userAvatar">A</div>
+      <div class="user-info">
+        <div class="user-email" id="userEmail">—</div>
+        <div class="user-role" id="userRole">usuário</div>
+      </div>
+      <button class="btn-logout" onclick="logout()" title="Sair">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+    <div class="sidebar-footer">
+      <div class="status-dot"></div>
+      API · localhost:8080
+    </div>
+  </aside>
+
+  <!-- ════════════ MAIN ════════════ -->
+  <main class="main">
+    <header class="header">
+      <div class="header-left">
+        <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Menu">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div>
+          <div class="header-title" id="headerTitle">Dashboard</div>
+          <div class="header-breadcrumb">AcadêmiX <span class="breadcrumb-sep">›</span> <span id="headerCrumb">Visão geral</span></div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="token-badge"><div class="token-badge-dot"></div>JWT ativo</div>
+        <button class="btn btn-primary" id="refreshBtn" onclick="refreshAll()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Atualizar
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header"><div class="page-title">Visão Geral</div><div class="page-sub">Métricas do sistema acadêmico em tempo real</div></div>
+        <div class="stats-grid">
+          <div class="stat-card blue" onclick="navigate('cursos')"><div class="stat-top"><div class="stat-label">Total de Cursos</div><div class="stat-icon-wrap blue"><svg class="stat-icon blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div></div><div class="stat-value loading-val" id="stat-cursos">—</div><div class="stat-footer">Clique para ver detalhes</div></div>
+          <div class="stat-card green" onclick="navigate('alunos')"><div class="stat-top"><div class="stat-label">Total de Alunos</div><div class="stat-icon-wrap green"><svg class="stat-icon green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div></div><div class="stat-value loading-val" id="stat-alunos">—</div><div class="stat-footer">Clique para ver detalhes</div></div>
+          <div class="stat-card amber" onclick="navigate('matriculas')"><div class="stat-top"><div class="stat-label">Total de Matrículas</div><div class="stat-icon-wrap amber"><svg class="stat-icon amber" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></div></div><div class="stat-value loading-val" id="stat-matriculas">—</div><div class="stat-footer">Clique para ver detalhes</div></div>
+        </div>
+        <div class="sidebar-label" style="margin-bottom:10px">Acesso rápido</div>
+        <div class="quick-grid">
+          <div class="quick-card" onclick="navigate('cursos')"><div class="quick-icon" style="background:var(--accent-dim)">📚</div><div class="quick-info"><div class="quick-title">Gerenciar Cursos</div><div class="quick-desc">Ver todos os cursos disponíveis</div></div><div class="quick-arrow">›</div></div>
+          <div class="quick-card" onclick="navigate('alunos')"><div class="quick-icon" style="background:var(--green-glow)">👥</div><div class="quick-info"><div class="quick-title">Gerenciar Alunos</div><div class="quick-desc">Consultar cadastro de alunos</div></div><div class="quick-arrow">›</div></div>
+          <div class="quick-card" onclick="navigate('matriculas')"><div class="quick-icon" style="background:var(--amber-glow)">📋</div><div class="quick-info"><div class="quick-title">Gerenciar Matrículas</div><div class="quick-desc">Acompanhar vínculos aluno-curso</div></div><div class="quick-arrow">›</div></div>
+        </div>
+      </div>
+
+      <!-- CURSOS -->
+      <div class="page" id="page-cursos">
+        <div class="page-header"><div class="page-title">Cursos</div><div class="page-sub">Catálogo de cursos cadastrados no sistema</div></div>
+        <div class="section-header"><div class="section-title">Todos os Cursos <span class="count-badge" id="count-cursos">—</span></div><div class="search-box"><svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Buscar curso…" id="search-cursos" oninput="filterTable('cursos')" /></div><button class="btn-new" id="btnNewCurso" style="display:none" onclick="openModal('curso')">+ Novo Curso</button></div>
+        <div class="table-wrap" id="table-cursos-wrap"><div class="state-box"><div class="state-icon">📚</div><div class="state-title">Aguardando…</div></div></div>
+      </div>
+
+      <!-- ALUNOS -->
+      <div class="page" id="page-alunos">
+        <div class="page-header"><div class="page-title">Alunos</div><div class="page-sub">Cadastro completo de alunos matriculados</div></div>
+        <div class="section-header"><div class="section-title">Todos os Alunos <span class="count-badge" id="count-alunos">—</span></div><div class="search-box"><svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Buscar aluno…" id="search-alunos" oninput="filterTable('alunos')" /></div><button class="btn-new" id="btnNewAluno" style="display:none" onclick="openModal('aluno')">+ Novo Aluno</button></div>
+        <div class="table-wrap" id="table-alunos-wrap"><div class="state-box"><div class="state-icon">👥</div><div class="state-title">Aguardando…</div></div></div>
+      </div>
+
+      <!-- MATRÍCULAS -->
+      <div class="page" id="page-matriculas">
+        <div class="page-header"><div class="page-title">Matrículas</div><div class="page-sub">Vínculos entre alunos e cursos</div></div>
+        <div class="section-header"><div class="section-title">Todas as Matrículas <span class="count-badge" id="count-matriculas">—</span></div><div class="search-box"><svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" placeholder="Buscar matrícula…" id="search-matriculas" oninput="filterTable('matriculas')" /></div><button class="btn-new" id="btnNewMatricula" onclick="openModal('matricula')">+ Nova Matrícula</button></div>
+        <div class="table-wrap" id="table-matriculas-wrap"><div class="state-box"><div class="state-icon">📋</div><div class="state-title">Aguardando…</div></div></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL GENÉRICO -->
+  <div id="genericModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header"><h3 id="modalTitle">Título</h3><button class="modal-close" onclick="closeModal()">&times;</button></div>
+      <div id="modalBody"></div>
+      <div class="modal-footer"><button class="btn-secondary" onclick="closeModal()">Cancelar</button><button class="btn-primary" id="modalSaveBtn">Salvar</button></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"><div class="toast-dot"></div><span id="toastMsg"></span></div>
+
+  <script>
+  
+  // ==================== CONFIG ====================
+const BASE = 'http://localhost:8080';
+const TOKEN_KEY = 'ax_token';
+const EMAIL_KEY = 'ax_email';
+let token = localStorage.getItem(TOKEN_KEY);
+
+  
+// ==================== VALIDAÇÃO DO TOKEN ====================
+function isTokenExpired(token) {
+  try {
+    const payloadBase64 = token.split('.')[1];
+    const payloadJson = atob(payloadBase64);
+    const payload = JSON.parse(payloadJson);
+    if (!payload.exp) return true; // se não tem expiração, considera inválido
+    const exp = payload.exp * 1000; // converte para milissegundos
+    return Date.now() >= exp;
+  } catch (e) {
+    return true; // token inválido/malformado
+  }
+}
+
+function validateTokenAndRedirect() {
+  if (!token || isTokenExpired(token)) {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(EMAIL_KEY);
+    window.location.replace('login.html');
+    return false;
+  }
+  return true;
+}
+
+// Executa a validação antes de qualquer outra coisa
+if (!validateTokenAndRedirect()) {
+  // O redirecionamento já aconteceu, então interrompe a execução do script
+  throw new Error('Token inválido ou expirado');
+}
+
+// Se chegou aqui, token é válido - continua normalmente
+// ==================== JWT DECODE (para obter roles e email) ====================
+function parseJwt(tk) {
+  try {
+    const base64Url = tk.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+    return JSON.parse(jsonPayload);
+  } catch(e) { return {}; }
+}
+
+const payload = parseJwt(token);
+const userRole = payload.authorities || (payload.roles ? payload.roles.map(r => r.replace('ROLE_', '')) : []);
+const isAdmin = userRole.includes('ADMIN') || userRole.includes('ROLE_ADMIN');
+
+// Recupera o email: primeiro do localStorage, se não tiver, tenta do payload (sub ou user_name)
+let savedEmail = localStorage.getItem(EMAIL_KEY);
+if (!savedEmail && payload.sub) savedEmail = payload.sub;
+if (!savedEmail && payload.user_name) savedEmail = payload.user_name;
+if (!savedEmail) savedEmail = 'usuário';
+localStorage.setItem(EMAIL_KEY, savedEmail); // garante que fique salvo
+
+// Atualiza a sidebar
+document.getElementById('userEmail').textContent = savedEmail;
+document.getElementById('userAvatar').textContent = savedEmail.charAt(0).toUpperCase();
+document.getElementById('userRole').textContent = isAdmin ? 'Administrador' : (userRole.includes('USER') ? 'Aluno' : 'Usuário');
+
+// Mostrar botões de novo (admin para cursos/alunos; matrícula para ambos)
+if (isAdmin) {
+  const btnCurso = document.getElementById('btnNewCurso');
+  const btnAluno = document.getElementById('btnNewAluno');
+  if (btnCurso) btnCurso.style.display = 'flex';
+  if (btnAluno) btnAluno.style.display = 'flex';
+}
+
+    // Mostrar botões de novo (admin para cursos/alunos; matrícula para ambos)
+    if (isAdmin) {
+      document.getElementById('btnNewCurso') && (document.getElementById('btnNewCurso').style.display = 'flex');
+      document.getElementById('btnNewAluno') && (document.getElementById('btnNewAluno').style.display = 'flex');
+      // Botão nova matrícula já está visível para todos
+    }
+
+    // ==================== GLOBALS ====================
+    const cache = { cursos: null, alunos: null, matriculas: null };
+    let currentModal = { type: null, id: null, data: null };
+    let alunoLogadoId = null;  // será preenchido para usuários não-admin
+
+    // ==================== API HELPER ====================
+    async function apiFetch(path, options = {}) {
+      const res = await fetch(BASE + path, {
+        ...options,
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', ...options.headers }
+      });
+      if (res.status === 401) { logout(); throw new Error('401'); }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.status === 204 ? null : res.json();
+    }
+
+    // ==================== BUSCAR ID DO ALUNO PELO EMAIL ====================
+    async function fetchAlunoIdByEmail(email) {
+      try {
+        // Tenta primeiro o endpoint /alunos/email/{email}
+        const aluno = await apiFetch(`/alunos/email/${encodeURIComponent(email)}`);
+        return aluno.id;
+      } catch (err) {
+        // Fallback: tentar /alunos?email=... (se existir)
+        try {
+          const alunos = await apiFetch(`/alunos?email=${encodeURIComponent(email)}`);
+          if (Array.isArray(alunos) && alunos.length > 0) return alunos[0].id;
+        } catch(e) {}
+        throw new Error('Não foi possível identificar o aluno logado. Contate o administrador.');
+      }
+    }
+
+    // ==================== CRUD ACTIONS ====================
+    async function deleteItem(type, id) {
+      if (!confirm(`Tem certeza que deseja excluir ${type} #${id}?`)) return;
+      try {
+        await apiFetch(`/${type}s/${id}`, { method: 'DELETE' });
+        toast(`${type} excluído com sucesso`, 'success');
+        await loadAll(); // recarrega tudo
+        if (type === 'curso') loadData('cursos');
+        else if (type === 'aluno') loadData('alunos');
+        else loadData('matriculas');
+      } catch (err) { toast(`Erro ao excluir: ${err.message}`, 'error'); }
+    }
+
+    function openModal(type, item = null) {
+      currentModal = { type, id: item?.id || null, data: item };
+      const modal = document.getElementById('genericModal');
+      const title = document.getElementById('modalTitle');
+      const bodyDiv = document.getElementById('modalBody');
+      if (type === 'curso') {
+        title.innerText = item ? 'Editar Curso' : 'Novo Curso';
+        bodyDiv.innerHTML = `
+          <div class="form-group"><label>Nome</label><input id="cursoNome" value="${item?.nome || ''}" placeholder="Ex: Engenharia de Software"></div>
+          <div class="form-group"><label>Descrição</label><input id="cursoDesc" value="${item?.descricao || ''}" placeholder="Descrição do curso"></div>
+          <div class="form-group"><label>Duração (meses)</label><input id="cursoDuracao" value="${item?.duracao || ''}" placeholder="Ex: 48"></div>
+          <div class="form-group"><label>Modalidade</label><input id="cursoModalidade" value="${item?.modalidade || ''}" placeholder="Presencial / EAD / Híbrido"></div>
+          <div class="form-group"><label>Valor Mensalidade (R$)</label><input id="cursoValor" value="${item?.valorMensalidade || ''}" type="number" step="0.01"></div>
+        `;
+      } else if (type === 'aluno') {
+        title.innerText = item ? 'Editar Aluno' : 'Novo Aluno';
+        bodyDiv.innerHTML = `
+          <div class="form-group"><label>Nome</label><input id="alunoNome" value="${item?.nome || ''}"></div>
+          <div class="form-group"><label>E-mail</label><input id="alunoEmail" value="${item?.email || ''}" type="email"></div>
+        `;
+      } else if (type === 'matricula') {
+        const alunos = cache.alunos || [];
+        const cursos = cache.cursos || [];
+        title.innerText = item ? 'Editar Matrícula' : 'Nova Matrícula';
+        
+        // Se for admin, mostra select de alunos; caso contrário, campo hidden com o ID do aluno logado
+        let alunoFieldHtml = '';
+        if (isAdmin) {
+          alunoFieldHtml = `
+            <div class="form-group"><label>Aluno</label>
+              <select id="matriculaAlunoId">
+                ${alunos.map(a => `<option value="${a.id}" ${item?.alunoId == a.id ? 'selected' : ''}>${a.nome}</option>`).join('')}
+              </select>
+            </div>`;
+        } else {
+          alunoFieldHtml = `<input type="hidden" id="matriculaAlunoId" value="${alunoLogadoId || ''}">`;
+        }
+        
+        bodyDiv.innerHTML = `
+          ${alunoFieldHtml}
+          <div class="form-group"><label>Curso</label>
+            <select id="matriculaCursoId">
+              ${cursos.map(c => `<option value="${c.id}" ${item?.cursoId == c.id ? 'selected' : ''}>${c.nome}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group"><label>Data Matrícula</label>
+            <input id="matriculaData" type="date" value="${item?.dataMatricula ? item.dataMatricula.split('T')[0] : ''}">
+          </div>
+          <div class="form-group"><label>Status</label>
+            <select id="matriculaStatus">
+              <option ${item?.status === 'ATIVA' ? 'selected' : ''}>ATIVA</option>
+              <option ${item?.status === 'CANCELADA' ? 'selected' : ''}>CANCELADA</option>
+              <option ${item?.status === 'CONCLUÍDA' ? 'selected' : ''}>CONCLUÍDA</option>
+            </select>
+          </div>
+        `;
+      }
+      modal.classList.add('active');
+      document.getElementById('modalSaveBtn').onclick = () => saveModal();
+    }
+
+    async function saveModal() {
+      const { type, id } = currentModal;
+      let url = `/${type}s`;
+      let method = 'POST';
+      let body = {};
+      try {
+        if (type === 'curso') {
+          body = {
+            nome: document.getElementById('cursoNome').value,
+            descricao: document.getElementById('cursoDesc').value,
+            duracao: document.getElementById('cursoDuracao').value,
+            modalidade: document.getElementById('cursoModalidade').value,
+            valorMensalidade: parseFloat(document.getElementById('cursoValor').value)
+          };
+          if (id) { url += `/${id}`; method = 'PUT'; }
+        } else if (type === 'aluno') {
+          body = {
+            nome: document.getElementById('alunoNome').value,
+            email: document.getElementById('alunoEmail').value
+          };
+          if (id) { url += `/${id}`; method = 'PUT'; }
+        } else if (type === 'matricula') {
+          let alunoId = parseInt(document.getElementById('matriculaAlunoId').value);
+          if (!isAdmin && alunoLogadoId) alunoId = alunoLogadoId;
+          body = {
+            alunoId: alunoId,
+            cursoId: parseInt(document.getElementById('matriculaCursoId').value),
+            dataMatricula: document.getElementById('matriculaData').value,
+            status: document.getElementById('matriculaStatus').value
+          };
+          if (id) { url += `/${id}`; method = 'PUT'; }
+        }
+        await apiFetch(url, { method, body: JSON.stringify(body) });
+        toast(`${type} salvo com sucesso`, 'success');
+        closeModal();
+        await loadAll();
+        if (type === 'curso') loadData('cursos');
+        else if (type === 'aluno') loadData('alunos');
+        else loadData('matriculas');
+      } catch (err) { toast(`Erro ao salvar: ${err.message}`, 'error'); }
+    }
+
+    function closeModal() { document.getElementById('genericModal').classList.remove('active'); currentModal = { type: null, id: null }; }
+
+    // ==================== RENDER COM BOTÕES ====================
+    function renderCursos(data) {
+      const wrap = document.getElementById('table-cursos-wrap');
+      document.getElementById('count-cursos').textContent = data.length;
+      document.getElementById('stat-cursos').textContent = data.length;
+      document.getElementById('stat-cursos').classList.remove('loading-val');
+      if (!data.length) { wrap.innerHTML = emptyState('Nenhum curso encontrado'); return; }
+      wrap.innerHTML = `<table id="tbl-cursos"><thead><tr><th>#</th><th>Nome</th><th>Modalidade</th><th>Duração</th><th>Mensalidade</th>${isAdmin ? '<th>Ações</th>' : ''}</tr></thead><tbody>` +
+        data.map(c => `<tr data-search="${(c.nome||'') + ' ' + (c.modalidade||'')}">
+          <td><span class="row-id">${c.id}</span></td>
+          <td class="td-main">${esc(c.nome)}</td><td>${esc(c.modalidade)}</td><td>${esc(c.duracao)}</td><td class="td-value">${currency(c.valorMensalidade)}</td>
+          ${isAdmin ? `<td class="action-buttons"><button class="btn-icon-sm edit" onclick="openModal('curso', ${JSON.stringify(c).replace(/"/g, '&quot;')})">✏️</button><button class="btn-icon-sm delete" onclick="deleteItem('curso', ${c.id})">🗑️</button></td>` : ''}
+        </td>`).join('') + '</tbody></table>';
+    }
+
+    function renderAlunos(data) {
+      const wrap = document.getElementById('table-alunos-wrap');
+      document.getElementById('count-alunos').textContent = data.length;
+      document.getElementById('stat-alunos').textContent = data.length;
+      document.getElementById('stat-alunos').classList.remove('loading-val');
+      if (!data.length) { wrap.innerHTML = emptyState('Nenhum aluno encontrado'); return; }
+      wrap.innerHTML = `<table id="tbl-alunos"><thead><tr><th>#</th><th>Nome</th><th>E-mail</th>${isAdmin ? '<th>Ações</th>' : ''}</tr></thead><tbody>` +
+        data.map(a => `<tr data-search="${(a.nome||'') + ' ' + (a.email||'')}">
+          <td><span class="row-id">${a.id}</span></td>
+          <td class="td-main">${esc(a.nome)}</td><td class="td-email">${esc(a.email)}</td>
+          ${isAdmin ? `<td class="action-buttons"><button class="btn-icon-sm edit" onclick="openModal('aluno', ${JSON.stringify(a).replace(/"/g, '&quot;')})">✏️</button><button class="btn-icon-sm delete" onclick="deleteItem('aluno', ${a.id})">🗑️</button></td>` : ''}
+        </tr>`).join('') + '</tbody></table>';
+    }
+
+    function renderMatriculas(data) {
+      const wrap = document.getElementById('table-matriculas-wrap');
+      document.getElementById('count-matriculas').textContent = data.length;
+      document.getElementById('stat-matriculas').textContent = data.length;
+      document.getElementById('stat-matriculas').classList.remove('loading-val');
+      if (!data.length) { wrap.innerHTML = emptyState('Nenhuma matrícula encontrada'); return; }
+      wrap.innerHTML = `<table id="tbl-matriculas"><thead><tr><th>#</th><th>Aluno</th><th>Curso</th><th>Data</th><th>Status</th>${isAdmin ? '<th>Ações</th>' : ''}</tr></thead><tbody>` +
+        data.map(m => {
+          const aluno = m.alunoNome || '—';
+          const curso = m.cursoNome || '—';
+          const dataMat = m.dataMatricula ? new Date(m.dataMatricula).toLocaleDateString('pt-BR') : '—';
+          const status = m.status || '—';
+          return `<tr data-search="${aluno + ' ' + curso}">
+            <td><span class="row-id">${m.id}</span></td>
+            <td class="td-main">${esc(aluno)}</td><td class="td-mono">${esc(curso)}</td><td>${esc(dataMat)}</td><td>${esc(status)}</td>
+            ${isAdmin ? `<td class="action-buttons"><button class="btn-icon-sm edit" onclick="openModal('matricula', ${JSON.stringify(m).replace(/"/g, '&quot;')})">✏️</button><button class="btn-icon-sm delete" onclick="deleteItem('matricula', ${m.id})">🗑️</button></td>` : ''}
+          </tr>`;
+        }).join('') + '</tbody></table>';
+    }
+
+    // ==================== LOAD & HELPERS ====================
+    async function loadData(entity) {
+      const wrap = document.getElementById(`table-${entity}-wrap`);
+      skeleton(wrap, entity === 'cursos' ? 5 : entity === 'matriculas' ? 5 : 3);
+      try {
+        let data;
+        if (entity === 'matriculas' && !isAdmin) {
+          if (!alunoLogadoId) throw new Error('Aluno não identificado');
+          data = await apiFetch(`/matriculas/aluno/${alunoLogadoId}`);
+        } else {
+          data = await apiFetch(`/${entity}`);
+        }
+        cache[entity] = data;
+        ({ cursos: renderCursos, alunos: renderAlunos, matriculas: renderMatriculas })[entity](data);
+      } catch (err) {
+        wrap.innerHTML = errorState(entity, err.message);
+      }
+    }
+
+    async function loadAll() {
+      // Primeiro, se não for admin, buscar o ID do aluno logado
+      if (!isAdmin && !alunoLogadoId) {
+        try {
+          alunoLogadoId = await fetchAlunoIdByEmail(savedEmail);
+          if (!alunoLogadoId) throw new Error();
+        } catch (err) {
+          toast('Não foi possível carregar seus dados. Contate o administrador.', 'error');
+          console.error(err);
+          // Mesmo sem ID, tenta carregar os outros dados (cursos e alunos)
+        }
+      }
+      
+      for (const e of ['cursos', 'alunos', 'matriculas']) {
+        try {
+          let data;
+          if (e === 'matriculas' && !isAdmin) {
+            if (!alunoLogadoId) throw new Error('Aluno não identificado para carregar matrículas');
+            data = await apiFetch(`/matriculas/aluno/${alunoLogadoId}`);
+          } else {
+            data = await apiFetch(`/${e}`);
+          }
+          cache[e] = data;
+          document.getElementById(`stat-${e}`).textContent = data.length;
+          document.getElementById(`stat-${e}`).classList.remove('loading-val');
+          ({ cursos: renderCursos, alunos: renderAlunos, matriculas: renderMatriculas })[e](data);
+        } catch (err) {
+          document.getElementById(`stat-${e}`).textContent = 'Err';
+          document.getElementById(`stat-${e}`).style.color = 'var(--amber)';
+          document.getElementById(`table-${e}-wrap`).innerHTML = errorState(e, err.message);
+        }
+      }
+    }
+
+    async function refreshAll() { await loadAll(); toast('Dados atualizados', 'success'); }
+
+    function filterTable(entity) {
+      const q = document.getElementById(`search-${entity}`).value.toLowerCase();
+      const tbl = document.getElementById(`tbl-${entity}`);
+      if (!tbl) return;
+      let visible = 0;
+      tbl.querySelectorAll('tbody tr').forEach(row => {
+        const show = !q || (row.dataset.search || '').includes(q);
+        row.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      document.getElementById(`count-${entity}`).textContent = visible;
+    }
+
+    function esc(s) { const d = document.createElement('div'); d.textContent = s || '—'; return d.innerHTML; }
+    function currency(v) { return v ? `R$ ${parseFloat(v).toLocaleString('pt-BR', {minimumFractionDigits:2})}` : '—'; }
+    function skeleton(wrap, cols) { wrap.innerHTML = '<table><tbody>' + Array(5).fill('<tr>' + Array(cols).fill('<td><div class="skeleton" style="width:70%"></div></td>').join('') + '</tr>').join('') + '</tbody></table>'; }
+    function emptyState(msg) { return `<div class="state-box"><div class="state-icon">🔍</div><div class="state-title">${msg}</div><div class="state-sub">Nenhum registro encontrado.</div></div>`; }
+    function errorState(entity, errMsg) { return `<div class="state-box"><div class="state-icon">⚠️</div><div class="state-title">Falha ao carregar</div><div class="state-sub">${esc(errMsg)}</div></div>`; }
+
+    function logout() { localStorage.clear(); window.location.replace('login.html'); }
+    function navigate(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById(`page-${page}`).classList.add('active');
+      document.getElementById(`nav-${page}`).classList.add('active');
+      const titles = { dashboard:'Dashboard', cursos:'Cursos', alunos:'Alunos', matriculas:'Matrículas' };
+      document.getElementById('headerTitle').textContent = titles[page];
+      document.getElementById('headerCrumb').textContent = page === 'dashboard' ? 'Visão geral' : `Lista de ${titles[page].toLowerCase()}`;
+      closeSidebar();
+      if (page !== 'dashboard' && !cache[page]) loadData(page);
+    }
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('overlay').classList.toggle('show'); }
+    function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+    let toastTimer; function toast(msg, type) { const el = document.getElementById('toast'); el.className = `toast ${type}`; document.getElementById('toastMsg').textContent = msg; el.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 3200); }
+
+    (async () => { await loadAll(); })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AcadêmiX — Entrar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="page-login">
+
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <main class="login-wrapper" role="main">
+    <div class="login-card" id="loginCard">
+
+      <!-- Marca -->
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">Ax</div>
+        <div class="brand-info">
+          <span class="brand-name">Acadêmi<em>X</em></span>
+          <span class="brand-tagline">Sistema Acadêmico</span>
+        </div>
+      </div>
+
+      <!-- Título -->
+      <div class="card-header">
+        <h1 class="card-title">Bem-vindo de volta</h1>
+        <p class="card-sub">Insira suas credenciais para acessar o painel</p>
+      </div>
+
+      <!--
+        CREDENCIAIS PADRÃO DO BANCO (import.sql):
+        Admin  → admin@senac.com    / 123456  (ROLE_ADMIN + ROLE_USER)
+        Alunos → caio.silva@email.com / 123456  (ROLE_USER)
+
+        ATENÇÃO — CORS:
+        O application.properties define cors.origins=http://localhost:3000,http://localhost:4200
+        Se você abrir o arquivo diretamente no navegador (file://) ou usar outra porta
+        (ex.: Live Server na porta 5500), o backend vai rejeitar a requisição.
+
+        SOLUÇÃO MAIS SIMPLES: altere o application.properties adicionando sua origem:
+          cors.origins=http://localhost:3000,http://localhost:4200,http://localhost:5500,http://127.0.0.1:5500
+
+        Ou use: cors.origins=*  (apenas em desenvolvimento)
+      -->
+
+      <!-- Hint de credenciais visível na tela -->
+      <div class="login-hint">
+        <div class="hint-row">🔑 <strong>Admin:</strong>&nbsp; admin@senac.com &nbsp;/&nbsp; 123456</div>
+        <div class="hint-row">🎓 <strong>Aluno:</strong>&nbsp; caio.silva@email.com &nbsp;/&nbsp; 123456</div>
+      </div>
+
+      <!-- Banner de erro -->
+      <div class="error-banner" id="errorBanner" role="alert" aria-live="polite" hidden>
+        <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span id="errorMsg"></span>
+      </div>
+
+      <!-- Formulário -->
+      <form class="login-form" id="loginForm" novalidate>
+
+        <div class="field-group">
+          <label class="field-label" for="email">E-mail</label>
+          <div class="field-wrap" id="fieldEmail">
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <input class="field-input" type="email" id="email" name="username"
+              placeholder="admin@senac.com" autocomplete="email" required spellcheck="false" />
+          </div>
+          <span class="field-error" id="emailError" role="alert"></span>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label-row">
+            <label class="field-label" for="password">Senha</label>
+          </div>
+          <div class="field-wrap" id="fieldPassword">
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input class="field-input" type="password" id="password" name="password"
+              placeholder="••••••••" autocomplete="current-password" required />
+            <button type="button" class="toggle-password" id="togglePwd" aria-label="Mostrar senha">
+              <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <span class="field-error" id="passwordError" role="alert"></span>
+        </div>
+
+        <button type="submit" class="btn-login" id="btnLogin">
+          <span class="btn-text" id="btnText">Entrar no sistema</span>
+          <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+          <svg class="btn-spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+          </svg>
+        </button>
+
+      </form>
+
+      <div class="security-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Autenticação protegida por OAuth2 + JWT
+      </div>
+
+    </div>
+
+    <footer class="login-footer">
+      AcadêmiX © 2025 &nbsp;·&nbsp; Spring Boot + OAuth2 Authorization Server
+    </footer>
+  </main>
+
+ <script>
+  // ============================================================
+  // CONFIGURAÇÕES DA API (igual ao seu application.properties)
+  // ============================================================
+  const BASE_URL      = 'http://localhost:8080';
+  const TOKEN_URL     = BASE_URL + '/oauth2/token';
+  const CLIENT_ID     = 'myclientid';       // security.client-id
+  const CLIENT_SECRET = 'myclientsecret';   // security.client-secret
+  const TOKEN_KEY     = 'ax_token';
+  const EMAIL_KEY     = 'ax_email';
+
+  // Se já estiver logado, vai direto ao dashboard
+  if (localStorage.getItem(TOKEN_KEY)) {
+    window.location.replace('dashboard.html');
+  }
+
+  // Elementos do DOM
+  const form        = document.getElementById('loginForm');
+  const btnLogin    = document.getElementById('btnLogin');
+  const btnText     = document.getElementById('btnText');
+  const errorBanner = document.getElementById('errorBanner');
+  const errorMsg    = document.getElementById('errorMsg');
+
+  function clearErrors() {
+    document.getElementById('emailError').textContent    = '';
+    document.getElementById('passwordError').textContent = '';
+    document.getElementById('fieldEmail').classList.remove('has-error');
+    document.getElementById('fieldPassword').classList.remove('has-error');
+    errorBanner.hidden = true;
+  }
+
+  function fieldErr(wrapId, errId, msg) {
+    document.getElementById(wrapId).classList.add('has-error');
+    document.getElementById(errId).textContent = msg;
+  }
+
+  function validate(email, pw) {
+    let ok = true;
+    if (!email) { fieldErr('fieldEmail','emailError','O e-mail é obrigatório.'); ok = false; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { fieldErr('fieldEmail','emailError','E-mail inválido.'); ok = false; }
+    if (!pw) { fieldErr('fieldPassword','passwordError','A senha é obrigatória.'); ok = false; }
+    return ok;
+  }
+
+  const togglePwd = document.getElementById('togglePwd');
+  const pwdInput  = document.getElementById('password');
+  togglePwd.addEventListener('click', () => {
+    const show = pwdInput.type === 'password';
+    pwdInput.type = show ? 'text' : 'password';
+    togglePwd.setAttribute('aria-label', show ? 'Ocultar senha' : 'Mostrar senha');
+    document.getElementById('eyeIcon').innerHTML = show
+      ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+         <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+         <line x1="1" y1="1" x2="23" y2="23"/>`
+      : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+  });
+
+  function setLoading(on) {
+    btnLogin.disabled = on;
+    btnLogin.classList.toggle('loading', on);
+    btnText.textContent = on ? 'Autenticando…' : 'Entrar no sistema';
+  }
+
+  function showError(msg) {
+    errorMsg.textContent = msg;
+    errorBanner.hidden = false;
+    errorBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ============================================================
+  // ENVIO CORRETO – Basic Auth no cabeçalho
+  // ============================================================
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearErrors();
+
+    const email = document.getElementById('email').value.trim();
+    const pw    = document.getElementById('password').value;
+    if (!validate(email, pw)) return;
+
+    setLoading(true);
+
+    try {
+      // 1) body contém SOMENTE grant_type, username e password
+      const body = new URLSearchParams();
+      body.append('grant_type', 'password');
+      body.append('username',   email);
+      body.append('password',   pw);
+
+      // 2) Basic Auth com client_id:client_secret
+      const credentials = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
+
+      const response = await fetch(TOKEN_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': `Basic ${credentials}`
+        },
+        body: body.toString()
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem(TOKEN_KEY, data.access_token);
+        localStorage.setItem(EMAIL_KEY, email);
+        window.location.href = 'dashboard.html';
+      } else {
+        let errorDescription = '';
+        try {
+          const errData = await response.json();
+          errorDescription = errData.error_description || '';
+        } catch (_) {}
+        if (response.status === 401 || response.status === 400) {
+          showError('E-mail ou senha incorretos.');
+        } else {
+          showError(`Erro ${response.status}${errorDescription ? ': ' + errorDescription : ''}`);
+        }
+      }
+    } catch (err) {
+      showError(
+        'Não foi possível conectar ao servidor.\n' +
+        'Verifique se o backend está rodando em http://localhost:8080\n' +
+        'e se a sua origem foi adicionada em cors.origins no application.properties.'
+      );
+      console.error('[Login] Erro:', err);
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  document.getElementById('email').addEventListener('input', clearErrors);
+  document.getElementById('password').addEventListener('input', clearErrors);
+  document.getElementById('loginCard').classList.add('card-enter');
+</script>
+</body>
+</html>
