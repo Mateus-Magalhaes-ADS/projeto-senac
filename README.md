@@ -15,7 +15,7 @@
 - [Testando a API com Postman](#testando-a-api-com-postman)
 - [Endpoints da API](#endpoints-da-api)
 - [Credenciais de Acesso](#credenciais-de-acesso)
-- [Membros do Grupo](#membros-do-grupo)
+
 
 ---
 
