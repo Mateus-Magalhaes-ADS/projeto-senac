@@ -17,7 +17,7 @@
 - [Credenciais de Acesso](#credenciais-de-acesso)
 
 
----.
+---
 
 ## 📖 Sobre o Projeto
 
