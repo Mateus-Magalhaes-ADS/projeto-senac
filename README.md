@@ -1,7 +1,7 @@
 # 📚 Sistema de Gestão Acadêmica — SENAC EAD.
 ### Projeto Integrador — 2ª Entrega | TADS / TSI
 
----
+---.
 
 ## 📋 Índice
 
