@@ -5,16 +5,17 @@
 
 ## 📋 Índice
 
-- [Sobre o Projeto](#sobre-o-projeto)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
-- [Pré-requisitos](#pré-requisitos)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Configuração do Banco de Dados (pgAdmin)](#configuração-do-banco-de-dados-pgadmin)
-- [Configuração do Backend](#configuração-do-backend)
-- [Configuração do Frontend](#configuração-do-frontend)
-- [Testando a API com Postman](#testando-a-api-com-postman)
-- [Endpoints da API](#endpoints-da-api)
-- [Credenciais de Acesso](#credenciais-de-acesso)
+- [Sobre o Projeto](#-sobre-o-projeto)
+- [Tecnologias Utilizadas](#%EF%B8%8F-tecnologias-utilizadas)
+- [Pré-requisitos](#-pré-requisitos)
+- [Estrutura do Projeto](#-estrutura-do-projeto)
+- [Configuração do Banco de Dados (pgAdmin)](#%EF%B8%8F-configuração-do-banco-de-dados-pgadmin)
+- [Configuração do Backend](#%EF%B8%8F-configuração-do-backend)
+- [Configuração do Frontend](#-configuração-do-frontend)
+- [Testando a API com Postman](#-testando-a-api-com-postman)
+- [Endpoints da API](#-endpoints-da-api)
+- [Credenciais de Acesso](#-credenciais-de-acesso)
+- [Problemas Comuns](#-problemas-comuns)
 
 
 ---
