@@ -25,7 +25,7 @@
 Sistema web de gestão acadêmica desenvolvido como Prova de Conceito (PoC) para a 2ª Entrega do Projeto Integrador do curso de TADS/TSI — SENAC EAD.
 
 O sistema permite o gerenciamento de **Alunos**, **Cursos** e **Matrículas**, com autenticação via OAuth2 (JWT), controle de acesso por perfis (ADMIN e USER) e integração com banco de dados PostgreSQL.
-
+.
 ---
 
 ## 🛠️ Tecnologias Utilizadas
